@@ -1,137 +1,147 @@
-// 'use strict';
-
-// IIF so that we don't pollute the global 
 (function(){
 
-
-
     var board = (function() {
+        var _squares = [0,1,2,3,4,5,6,7,8];
+        var _updateBoard = function(index, player){
+            _squares[index] = player;
+        };
+        var _resetBoard = function() {
 
-        var moveCount = {
-            X: 0,
-            O: 0
-        }
-
-        var squares = {
-            a: {
-                1: 'open',
-                2: 'open',
-                3: 'open'
-            },
-            b: {
-                1: 'open',
-                2: 'open',
-                3: 'open'
-            },
-            c: {
-                1: 'open',
-                2: 'open',
-                3: 'open'
-            },
+            for(let x=0; x<_squares.length;x++){
+                _squares[x] = x;
+            }
+        };
+        var _getSquares = function(){
+            return _squares;
         };
 
-        /**
-         * updates our board 
-         */
-        _updateBoard = function(id, sign){
-
-            moveCount[sign]++;
-
-            squares[id[0]][id[1]] = sign;            
+        var _hasWon = function(player, passedSquares){
+            passedSquares = !passedSquares ? _squares : passedSquares;
+            if(
+                (passedSquares[0] === player && passedSquares[1] === player && passedSquares[2] === player) ||
+                (passedSquares[3] === player && passedSquares[4] === player && passedSquares[5] === player) ||
+                (passedSquares[6] === player && passedSquares[7] === player && passedSquares[8] === player) ||
+                (passedSquares[0] === player && passedSquares[3] === player && passedSquares[6] === player) ||
+                (passedSquares[1] === player && passedSquares[4] === player && passedSquares[7] === player) ||
+                (passedSquares[2] === player && passedSquares[5] === player && passedSquares[8] === player) ||
+                (passedSquares[0] === player && passedSquares[4] === player && passedSquares[8] === player) ||
+                (passedSquares[2] === player && passedSquares[4] === player && passedSquares[6] === player)
+            ){
+                return true;
+            }
+            else {
+                return false;
+            }
         };
 
-
-        // TODO: refactor this - there has got be a smarter way
-        _determineWinner = function(){
-
-            // check for a row winner
-            for(let prop in squares){
-                if(squares.hasOwnProperty(prop)){
-                    var obj = squares[prop];
-                    if(obj[1] === obj[2] && obj[1] === obj[3] && obj[1] !== 'open'){
-                        console.log('WINNER', obj[1]);
-                        return obj[1];
-                    }
-                }
+        var _determineWinner = function(){
+            var msg = null;
+            if(_hasWon('X')){
+                msg = 'You Win!';
+            } else if ( _hasWon('O')){
+               msg = 'You Lose!';
+            } else if (_getOpenSquares().length === 0){
+                msg = 'Tie Game!';
             }
-
-            // check columns for a winner
-            for(let i=1; i<=3;i++){
-                if(squares.a[i] === squares.b[i] && squares.a[i] === squares.c[i] && squares.a[i] !== 'open'){
-                    console.log('WINNER', squares.a[i]);
-                    return squares.a[i];
-                }
+            if(msg){
+                setTimeout(() => {
+                    alert(msg);
+                    _resetBoard();
+                }, 100);
+                return true;
             }
+            return false;
+        };
 
-            // check for a diag winner
-            if(squares.a[1] == squares.b[2] && squares.a[1] === squares.c[3] && squares.a[1] !== 'open'){
-                console.log('WINNER', squares.a[1]);
-                return squares.a[1];
-            }
-
-            // check other diag winner
-            if(squares.a[3] == squares.b[2] && squares.a[3] === squares.c[1] && squares.a[3] !== 'open'){
-                console.log('WINNER', squares.a[3]);
-                return squares.a[3];
-            }
-
+        // returns array of available squares
+        let _getOpenSquares = function(){
+            return _squares.filter(square => !isNaN(square));
         };
 
         return {
-            squares: squares,
+            squares: _squares,
             updateBoard: _updateBoard,
+            hasWon: _hasWon,
             determineWinner: _determineWinner,
-            moveCount: moveCount
+            getOpenSquares:_getOpenSquares,
+            getSquares: _getSquares
         };
 
     })();
 
 
+    var player1 = {
+        mark: 'X',
+        score: 0
+    };
+
     var computer = (function(){
 
         let mark = 'O';
+        let score = 0;
 
         // returns a move for the computer to make
-        let _determineMove = function(squares, moveCount){
-
-
-            if(moveCount.O > 2){
-
-                // see if we have a win
-                
-            }
-
-
-            if(moveCount.X > 2){
-
-                // go on the defense and stop X from winning
-                
-            }
-
-            console.log(moveCount);
-
-
+        let _determineMove = function(board){
             
 
+           let available = board.getOpenSquares();
+           let tempSquares = null;
 
+           // reviews all the open moves and looks for a winning move
+           // while also looking for any defense moves to stop player 1 
+           // from winning
+           // TODO - if not winning or blocking moves look for an 
+           // adventitious move
+           for(item of available){
+               let tempSquares = Object.assign({}, board.getSquares());
+               tempSquares[item] = mark;
+               if(board.hasWon(mark, tempSquares)){
+                   return item;
+               }
+               tempSquares[item] = 'X';
+               if(board.hasWon('X', tempSquares)){
+                   // nice little lesson I defined this with let originallly
+                   // which gave it block scope and thus wasn't hoisted 
+                   // high enough for us
+                   var blockingMove = item;
+                }
+           }
 
-
-
-
-
-
+           if(blockingMove){
+               return blockingMove;
+           }
+           return available[Math.floor(Math.random() * (available.length - 0)) + 0];
         };
 
         return {
-            determineMove: _determineMove
+            determineMove: _determineMove,
+            mark: mark,
+            score: score
         };
     })();
 
 
     const square = document.querySelectorAll('.square');
-    let player = 'X';
+    const player1Score = document.querySelector('#player1-score');
+    const computerScore = document.querySelector('#computer-score');
+    
+    var resetBoard = function() {
+        if(board.hasWon(player1.mark)){
+            player1.score++;
+        } else if (board.hasWon(computer.mark)){
+            computer.score++;
+        }
 
 
+        setTimeout(() => {
+            for(let j = 0; j< square.length;j++){
+                square[j].className = 'col-xs-4 square';
+            }
+        }, 100);
+
+        player1Score.innerText = 'You: ' + player1.score;
+        computerScore.innerText = 'Computer: ' + computer.score;
+    };
 
     // really fighting the jQuery urge here, need to assign 
     // event handler to all squares.  We'll use a loop 
@@ -139,29 +149,35 @@
     // another approach would be to use var and wrap our callback in 
     // in a closure or define the call back outside of our loop
 
+    let currentPlayer = player1;
+
     for(let i = 0; i< square.length;i++){
         square[i].addEventListener('click', (e) => {
-            e.currentTarget.className += ' occupied ' + player;
-
-            board.updateBoard(e.currentTarget.id, player);
-
-
-            board.determineWinner();
-
-
-       
             
-            // conditional (ternary) operator to swap players
-            player = player === 'X' ? 'O' : 'X';
+            e.currentTarget.className += ' occupied ' + currentPlayer.mark;
 
-            if(player === "O"){
+            board.updateBoard(i, currentPlayer.mark);
+            if(board.determineWinner()){
+                resetBoard();
+                return false;
+            }
 
-                computer.determineMove(board.squares, board.moveCount);
+            currentPlayer = computer;
 
+            if(currentPlayer.mark === "O"){
+
+                var move = computer.determineMove(board);
+  
+                board.updateBoard(move, currentPlayer.mark);
+                square[move].className += ' occupied ' + currentPlayer.mark;
+                if(board.determineWinner()){
+                    resetBoard();
+                }
+                
+                currentPlayer = player1;
 
             }
 
         });
     }
-
 })();

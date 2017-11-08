@@ -45,3 +45,8 @@ body {
 .board .row .square:last-child {
     border-right: 0px;
 }
+
+.score div{
+    font-weight: bold;
+    margin-top: 35px;
+}
