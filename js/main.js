@@ -1,5 +1,20 @@
+/**
+ * TODO 
+ * - allow user to choose X or O
+ * - The computers choice in moves happens immediately after the user goes
+ *   change that so there is at least a small delay 
+ * - pull UI changes into their own class or module 
+ * - be consistent, unless compelling reason, with use of 'let' and 'var'
+ * - allow user to choose difficulty level (easy, medium, impossible)    
+ * 
+ */
+
 (function(){
 
+    /**
+     * revealing module pattern 
+     * 
+     */
     var board = (function() {
         var _squares = [0,1,2,3,4,5,6,7,8];
         var _updateBoard = function(index, player){
@@ -124,6 +139,11 @@
     const square = document.querySelectorAll('.square');
     const player1Score = document.querySelector('#player1-score');
     const computerScore = document.querySelector('#computer-score');
+    const instructions = document.querySelector('#instructions');
+
+    setTimeout(() => {
+        instructions.className += ' hidden';
+    }, 2000);
     
     var resetBoard = function() {
         if(board.hasWon(player1.mark)){
@@ -173,9 +193,7 @@
                 if(board.determineWinner()){
                     resetBoard();
                 }
-                
                 currentPlayer = player1;
-
             }
 
         });

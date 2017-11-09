@@ -6,7 +6,15 @@
     <body>
         
         <div class="container main">
-             <!-- <h2 class='title'>Tic Tac Toe</h2> -->
+             <h2 class='title'>Tic Tac Toe</h2> 
+             <div class="row" id='instructions'>
+                <div class="col-xs-5 alert alert-success">I'll let you go first</div>
+             </div>
+             <div class="score row">
+                <div id="player1-score" class="col-xs-6 player1"></div>
+                <div id="computer-score" class="col-xs-6 computer"></div>
+
+            </div>
              <div class="board">
                 <div class="row">
                     <div id="a1" class="col-xs-4 square"></div>
@@ -24,11 +32,7 @@
                     <div id="c3" class="col-xs-4 c3 square"></div>
                 </div>
             </div>
-            <div class="score row">
-                <div id="player1-score" class="col-xs-6 player1"></div>
-                <div id="computer-score" class="col-xs-6 computer"></div>
 
-            </div>
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

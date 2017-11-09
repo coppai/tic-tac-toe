@@ -11,6 +11,11 @@ body {
 }
 
 
+.title {
+    margin: 0 0 75px 100px;
+}
+
+
 .X {
 
     background-image: url('../images/xs_and_os.png');
@@ -48,5 +53,5 @@ body {
 
 .score div{
     font-weight: bold;
-    margin-top: 35px;
+    margin-bottom: 25px;
 }
