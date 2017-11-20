@@ -29,6 +29,10 @@ body {
     
 }
 
+.occupied:hover {
+    cursor: default !important;
+}
+
 .board .row .square{
     border: 1px solid black;
     height: 200px;

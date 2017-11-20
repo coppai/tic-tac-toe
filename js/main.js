@@ -174,6 +174,16 @@
     for(let i = 0; i< square.length;i++){
         square[i].addEventListener('click', (e) => {
             
+            // make sure the select square isn't occupied
+            if(board.squares[i] !== i){
+                return false;
+            }
+
+            // an alternative approach to the above check
+            // if(e.currentTarget.className.split(' ').some(val => val === 'occupied')){
+            //     return false;
+            // }
+
             e.currentTarget.className += ' occupied ' + currentPlayer.mark;
 
             board.updateBoard(i, currentPlayer.mark);
