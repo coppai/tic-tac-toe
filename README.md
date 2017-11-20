@@ -10,4 +10,4 @@ A javascript based tic-tac-toe game.
 
 ## demo 
 
-[https://simple-tic-tac-toe.herokuapp.com/](https://simple-tic-tac-toe.herokuapp.com/)
+[http://www.iancoppa.com/projects/tictactoe/](http://www.iancoppa.com/projects/tictactoe/)
