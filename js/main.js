@@ -101,6 +101,7 @@
 
            let available = board.getOpenSquares();
            let tempSquares = null;
+           let blockingMove = null;
 
            // reviews all the open moves and looks for a winning move
            // while also looking for any defense moves to stop player 1 
@@ -118,11 +119,11 @@
                    // nice little lesson I defined this with let originallly
                    // which gave it block scope and thus wasn't hoisted 
                    // high enough for us
-                   var blockingMove = item;
+                   blockingMove = item;
                 }
            }
 
-           if(blockingMove){
+           if(blockingMove !== null){
                return blockingMove;
            }
            return available[Math.floor(Math.random() * (available.length - 0)) + 0];
